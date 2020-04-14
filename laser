@@ -1,0 +1,38 @@
+from pygame import *
+import pygame
+import math
+import os
+
+class Laser(pygame.sprite.Sprite):
+	""" Inits the laser object. """
+	def __init__(self, position, velocity):
+
+		pygame.sprite.Sprite.__init__(self)
+		self.position = position
+		self.velocity = velocity
+		self.image = pygame.image.load(os.path.join("res", "laser.png"))
+		self.Cimage = pygame.transform.scale(self.image, [10,30])
+		self.image = self.Cimage
+		self.rect = self.image.get_rect()
+		self.rect.centerx = position.x
+		self.rect.centery = position.y
+		self.mask = pygame.mask.from_surface(self.image)
+
+	def update(self, shots,screen):
+		""" Updates positionition """
+		if self.outofbounds(screen):
+			shots.remove(self)
+			return
+		self.velocity = self.velocity
+		self.position += self.velocity * 20
+		self.image = pygame.transform.rotate(self.Cimage, math.degrees(self.velocity.angle()) + 180)
+		self.rect = self.image.get_rect()
+		self.rect.centerx = self.position.x
+		self.rect.centery = self.position.y
+
+	def outofbounds(self, screen):
+		""" Checks if the shot is inside of the screen """
+		if screen.backgroundrect.contains(self.rect):
+			return False
+		else:
+			return True
