@@ -1,0 +1,67 @@
+import pygame
+import os
+import math
+from config import Config
+from vector import Vector
+
+class Spaceship(pygame.sprite.Sprite):
+    """ loads and controlls the spaceship sprite. Functionallity to manage its behaviure is also included in this class """
+    def __init__(self, x, y, num, speedx = 0, speedy = 0):
+        """ initializes the spaceship """
+        pygame.sprite.Sprite.__init__(self)
+        self.position = Vector(x, y)
+        self.velocity = Vector(speedx, speedy)
+        self.angle = self.velocity
+        self.lock = False
+        self.on_pad = True
+        self.platformposition = Vector(x,y)
+        self.respawnposition = Vector(x, y)
+        if num == 1:
+            self.image = pygame.image.load(os.path.join("res", "Ship_red.png"))
+        elif num ==2:
+            self.image = pygame.image.load(os.path.join("res", "Ship_green.png"))
+        self.Cimage = pygame.transform.scale(self.image, [50, 50])
+        self.image = self.Cimage
+        self.rect = self.image.get_rect()
+        self.rect.centerx = x
+        self.rect.centery = y
+        self.mask = pygame.mask.from_surface(self.image)
+        self.scale = 1
+
+
+    def update(self):
+        """ Updates spaceship position"""
+        self.position += self.velocity
+        self.position.y += 0.5 #adds gravity
+        self.velocity*= 0.4
+        self.keepinside()
+        self.image = pygame.transform.rotozoom(self.Cimage, math.degrees(self.angle.angle()) + 180, self.scale)
+        self.rect = self.image.get_rect()
+        self.rect.centerx = self.position.x
+        self.rect.centery = self.position.y
+
+    def keepinside(self):
+        """ Keeping ship from wandering outside of the screen bounds"""
+        if self.position.x > Config.Screen_Size[0]:
+            self.velocity.x = -1
+        elif self.position.x < 0:
+            self.velocity.x = 1
+        elif self.position.y > Config.Screen_Size[1]:
+            self.velocity.y = -1
+        elif self.position.y < 0:
+            self.velocity.y = 1
+
+
+
+    def set_pos(self):
+        """ Resetting the position of the spaceship """
+        self.position= self.respawnposition
+
+    def reset(self):
+        """ Resets the spaceship to inital position """
+        self.position= self.respawnposition
+        self.velocity= Vector(0,0)
+        self.rect = self.image.get_rect()
+        self.rect.centerx = self.position.x
+        self.rect.centery = self.position.y
+
