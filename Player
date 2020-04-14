@@ -1,0 +1,85 @@
+from spaceship import Spaceship
+from laser import Laser
+import pygame
+from pygame import *
+import math
+from config import Config 
+from Text import Text
+
+class Player():
+	""" Contains the player and manages the actions of the player """
+	def __init__(self, number):
+		"""initializes a player instance"""
+		self.number = number
+		if number == 2:
+			self.textposition = (100, 50)
+			self.spaceship = Spaceship(Config .platform2[0] + 100, Config .platform2[1] + 20, number, -1, -1)
+		else:
+			self.textposition = (Config .height - 100, 50)
+			self.spaceship = Spaceship(Config .platform1[0] + 100, Config .platform1[1] + 20, number, -1, -1)
+		self.shots = pygame.sprite.Group()
+		self.lock = False
+		self.lockthrust = False
+		self.stats = self.init_stats()
+
+
+
+	def init_stats(self):
+		"""Adding text"""
+		status = pygame.sprite.Group()
+		self.fuel = Text(self.number, (self.textposition[0],self.textposition[1] + 20), "Fuel", Config .defaultfuel)
+		self.Ammo = Text(self.number, (self.textposition[0], self.textposition[1] + 40), "Ammo",Config .bulletcount )
+		self.Lives = Text(self.number, (self.textposition[0],self.textposition[1] + 60),  "Health", Config .defaultlives)
+		self.score = Text(self.number, (self.textposition[0],self.textposition[1]), "Score", Config .score)
+		status.add(self.fuel)
+		status.add(self.score)
+		status.add(self.Lives)
+		status.add(self.Ammo)
+		return status
+
+	def fire(self):
+		""" Shooting bullets """
+		if(self.lock or self.Ammo.value <1):
+			return
+		shot = Laser(self.spaceship.position, self.spaceship.angle)
+		self.Ammo.value -= 1
+		self.shots.add(shot)
+		self.lock = True
+		pygame.time.set_timer(USEREVENT+self.number, 200)
+
+	def thrust(self):
+		""" Thrusting forward """
+		if self.lockthrust:
+			return
+		self.spaceship.velocity += (self.spaceship.velocity + self.spaceship.angle)
+
+	def reverse(self):
+		""" Thrusting backwards """
+		if self.lockthrust:
+			return
+		self.spaceship.velocity -= (self.spaceship.velocity + self.spaceship.angle)
+
+	def rotate_right(self):
+		""" Moving ship to the right """
+		self.spaceship.velocity = self.spaceship.velocity.rotate(math.radians(3))
+		self.spaceship.angle = self.spaceship.angle.rotate(math.radians(3))
+
+	def rotate_left(self):
+		""" Moving ship to the left """
+		self.spaceship.velocity = self.spaceship.velocity.rotate(math.radians(-3))
+		self.spaceship.angle = self.spaceship.angle.rotate(math.radians(-3))
+
+
+	def reset(self):
+		""" Reseting all parameters to inital value """
+		self.spaceship.scale = 1
+		self.reset_stats()
+		self.lockthrust = False
+		self.spaceship.reset()
+
+	def reset_stats(self):
+		""" Resetting player status """
+		list = self.stats.sprites()
+		for stats in list:
+			stats.value = stats.initialvalue
+
