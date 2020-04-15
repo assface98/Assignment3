@@ -1,3 +1,5 @@
+"""Author: Erlend Theimann"""
+
 import pygame
 from pygame.locals import *
 from config import Config
@@ -5,7 +7,9 @@ import vector
 pygame.init()
 
 class Obstacle(pygame.sprite.Sprite):
+    """Holds the obstacles"""
     def __init__(self, x, y, image):
+        """Initializes obstacle objects"""
         pygame.sprite.Sprite.__init__(self)
         self.position = vector.Vector(x,y)
         self.cimage = image
