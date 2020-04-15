@@ -1,3 +1,5 @@
+"""Author: Erlend Theimann"""
+
 from platform import Platform
 from obstacle import *
 from config import Config
@@ -5,44 +7,30 @@ import os
 
 
 class Map:
-    """ Holds the surface to be drawn on and all obects that is contained in the world that is not spawned or controlled by the player """
+    """ Contains surface to be drawn on and all objects in the world that is not spawned or controlled by the player """
     def __init__(self):
-        """ Initializing pygame, background and attributes in the game inviroment"""
+        """ Initializes pygame, background and attributes in the game environment"""
         pygame.init()
         pygame.display.set_mode((Config.Screen_Size[0] , Config.Screen_Size[1]))
-        self.platform1 = Platform(Config.platform1[0] , Config.platform1[1], self.loadimage(os.path.join("res", "platform2.png")))
-        self.platform2 = Platform(Config.platform2[0] , Config.platform2[1], self.loadimage(os.path.join("res", "platform2.png")))
+
+        self.platform1 = Platform(Config.platform1[0] , Config.platform1[1], self.loadimage(os.path.join("images", "platform.png")))
+        self.platform2 = Platform(Config.platform2[0] , Config.platform2[1], self.loadimage(os.path.join("images", "platform.png")))
         self.platforms = self.add_platforms()
-        self.obstacle1 = Obstacle(Config.obstacle1[0] , Config.obstacle1[1], self.loadimage(os.path.join("res", "asteroid.png")))
-        self.obstacle2 = Obstacle(Config.obstacle2[0] , Config.obstacle2[1], self.loadimage(os.path.join("res", "asteroid.png")))
-        self.obstacle3 = Obstacle(Config.obstacle3[0] , Config.obstacle3[1], self.loadimage(os.path.join("res", "asteroid.png")))
-        self.obstacle4 = Obstacle(Config.obstacle4[0] , Config.obstacle4[1], self.loadimage(os.path.join("res", "asteroid.png")))
-        self.obstacle5 = Obstacle(Config.obstacle5[0] , Config.obstacle5[1], self.loadimage(os.path.join("res", "asteroid.png")))
+
+        self.obstacle1 = Obstacle(Config.obstacle1[0] , Config.obstacle1[1], self.loadimage(os.path.join("images", "asteroid.png")))
+        self.obstacle2 = Obstacle(Config.obstacle2[0] , Config.obstacle2[1], self.loadimage(os.path.join("images", "asteroid.png")))
+        self.obstacle3 = Obstacle(Config.obstacle3[0] , Config.obstacle3[1], self.loadimage(os.path.join("images", "asteroid.png")))
+        self.obstacle4 = Obstacle(Config.obstacle4[0] , Config.obstacle4[1], self.loadimage(os.path.join("images", "asteroid.png")))
+        self.obstacle5 = Obstacle(Config.obstacle5[0] , Config.obstacle5[1], self.loadimage(os.path.join("images", "asteroid.png")))
         self.obstacles = self.add_obstacles()
 
-
-        self.background = pygame.transform.scale(self.loadimage(os.path.join("res", "nebula.jpg")), (Config.Screen_Size[0], Config.Screen_Size[1]))
+        self.background = pygame.transform.scale(self.loadimage(os.path.join("images", "nebula.jpg")), (Config.Screen_Size[0], Config.Screen_Size[1]))
         self.backgroundrect = self.background.get_rect()
         self.screen = pygame.display.get_surface()
 
 
-    def loadimage(self, filename):
-        """ loading image """
-        return pygame.image.load(filename)
-
-    def get_rect(self):
-        """ Returns the rect of the background """
-        return self.backgroundrect
-
-    def add_platforms(self):
-        """ adding platforms to spritegroup """
-        platforms = pygame.sprite.Group()
-        platforms.add(self.platform1)
-        platforms.add(self.platform2)
-        return platforms
-
     def add_obstacles(self):
-        """adding obstacles to spritegroup"""
+        """Adds obstacles to sprite group"""
         obstacles = pygame.sprite.Group()
         obstacles.add(self.obstacle1)
         obstacles.add(self.obstacle2)
@@ -51,8 +39,23 @@ class Map:
         obstacles.add(self.obstacle5)
         return obstacles
 
+    def add_platforms(self):
+        """ Adds platforms to sprite group """
+        platforms = pygame.sprite.Group()
+        platforms.add(self.platform1)
+        platforms.add(self.platform2)
+        return platforms
+
+    def loadimage(self, filename):
+        """ loads image """
+        return pygame.image.load(filename)
+
+    def get_rect(self):
+        """ Returns rect of background """
+        return self.backgroundrect
+
     def draw(self):
-        """ Drawing background and platform """
+        """ Draws background and platform """
         self.screen.blit(self.background, self.background.get_rect())
         self.platforms.draw(self.screen)
         self.obstacles.draw(self.screen)
