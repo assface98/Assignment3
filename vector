@@ -1,13 +1,15 @@
+"""Author: Erlend Theimann"""
+
 import math
 class Vector(object):
 
 	def __init__(self, x, y):
-		""" Initialize the vector with the given x and y coordinate """
+		""" Initialize the vector with given x and y coordinates """
 		self.x = x
 		self.y = y
 
 	def __repr__(self):
-		""" Retuns a human readable representation of the vector """
+		""" Returns readable representation of vector """
 		return "Vector(%s, %s)" % (self.x, self.y)
 
 	def __add__(self, a):
@@ -19,9 +21,7 @@ class Vector(object):
 		return Vector(self.x - a.x, self.y - a.y)
 
 	def __mul__(self, a):
-		""" Multiplication by a scalar
-		Note that the scalar must be to the right.
-		"""
+		""" Multiplication by a scalar"""
 		try:
 			b = float(a)
 			return Vector(self.x * a, self.y * a)
@@ -30,15 +30,15 @@ class Vector(object):
 			raise
 
 	def magnitude(self):
-		""" Returns the magnitude of the vector. """
+		""" Returns magnitude of vector. """
 		return math.sqrt(self.x ** 2 + self.y ** 2)
 
 	def copy(self):
-		""" Returns a copy of the vector. """
+		""" Returns copy of vector. """
 		return Vector(self.x, self.y)
 
 	def __div__(self, a):
-		""" Dividing a vector by b """
+		""" Dividing vector by b """
 		try:
 			if a == 0:
 				return Vector(0,0)
@@ -52,14 +52,14 @@ class Vector(object):
 		""" Get item at index "key" """
 		if key == 0:
 			return int(self.x)
-		elif key == 1:
+		if key == 1:
 			return int(self.y)
 		else:
 			print ("Oops! Right value must be a float")
 			raise
 
 	def __len__(self):
-		""" Get lenght of vector """
+		""" Get length of vector """
 		return 2
 
 	def diff(self, a):
@@ -67,9 +67,9 @@ class Vector(object):
 		return (self - a).magnitude()
 
 	def angle(self):
-		""" Calculates the angle of the vector (radians) """
+		""" Calculates angle of vector in radians """
 		return math.atan2(self.x, self.y)
 
 	def rotate(self, theta):
-		""" Rotatates the vector "theta" degrees (radians) """
+		""" Rotates vector "theta" degrees in radians """
 		return Vector(self.x * math.cos(theta) - self.y * math.sin(theta), self.x * math.sin(theta) + self.y * math.cos(theta))
