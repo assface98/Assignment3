@@ -1,23 +1,27 @@
+"""Author: Erlend Theimann"""
 import pygame
 
 class Text(pygame.sprite.Sprite):
-    """ A helper class to manage text enteties on the screen """
-    def __init__(self, num, pos,name, value):
-        """ Initialising text position, which player it is, the value that it
-        should contain, and the actual text"""
+    """ Helps manage text entities on screen """
+    def __init__(self, number, position,name, value):
+        """ Initializes text position, which player it is and the value that it should contain, and the text"""
+
         pygame.sprite.Sprite.__init__(self)
         self.value = value
         self.initialvalue = value
+
         self.name = name
         self.text = str(self.name) + str(self.value)
-        self.center = pos
+        self.center = position
         self.font = pygame.font.SysFont("None", 25)
-        self.num = num
+        self.number = number
         self.update()
 
     def update(self):
-        """ Rendering text """
+        """ Renders text """
+
         self.text = str(self.name) + " "+ str(self.value)
         self.image = self.font.render(self.text, 1, pygame.Color("green"))
+
         self.rect = self.image.get_rect()
         self.rect.center = self.center
